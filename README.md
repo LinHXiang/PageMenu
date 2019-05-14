@@ -2,15 +2,15 @@
 
 
 # use
-
+```
  let pageMenuView = PageMenuView(keys: key, delegate: self)
-
+```
 # setUp(like color..)
-
+```
  pageMenuView.setTagControl(normalColor: UIColor.red, selectedColor: UIColor.black, lineColor: UIColor.green)
- 
+ ```
 # setUpSubviews
-
+```
  func commonInitTagView(tag: Int) -> UIView {
         let view = UIView()
         switch tag {
@@ -29,5 +29,4 @@
         }
         return view
   }
-
-
+```
