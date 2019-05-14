@@ -21,14 +21,9 @@ class PageMenuSegmentedControl: UIView {
     public var scrollLineConstraints:[NSLayoutConstraint] = []
     
     public let titleButtonTag = 80000
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-
-    convenience init(_ titles:[String],lineColor:UIColor = UIColor.red){
+    
+    func commonInit(_ titles:[String],lineColor:UIColor = UIColor.red){
         
-        self.init(frame:CGRect.zero)
         self.backgroundColor = UIColor.white
         self.translatesAutoresizingMaskIntoConstraints = false
         self.titles = titles
@@ -141,11 +136,6 @@ class PageMenuSegmentedControl: UIView {
             self.scrollLineConstraints = [lineLeftConstraint,lineRightConstraint]
             self.addConstraints(self.scrollLineConstraints)
         }
-    }
-    
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     //分割线
