@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController,PageMenuViewDelegate {
+class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,10 @@ class ViewController: UIViewController,PageMenuViewDelegate {
         self.view.addConstraints(constraintArrayH)
         self.view.addConstraints(constraintArrayV)
     }
-    
+}
+
+
+extension ViewController : PageMenuViewDelegate {
     
     func commonInitTagView(tag: Int) -> UIView {
         let view = UIView()
@@ -44,7 +47,5 @@ class ViewController: UIViewController,PageMenuViewDelegate {
         }
         return view
     }
-
-
+    
 }
-
