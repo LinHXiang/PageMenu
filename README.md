@@ -3,7 +3,7 @@
 
 # use
 ```
- let pageMenuView = PageMenuView(keys: key, delegate: self)
+ let pageMenuView = PageMenuView(keys: ["test","test1","test2","test3","test4"], delegate: self)
 ```
 # setUp(like color..)
 ```
