@@ -102,16 +102,18 @@ class PageMenuSegmentedControl: UIView {
     }
     
     func scrolling(offset:CGFloat){
-        if let button = viewWithTag(Int(offset/self.frame.width + CGFloat(titleButtonTag) + 0.5)) as? UIButton , button != selectedBtn{
-            selectedBtn?.isSelected = false
-            button.isSelected = true
-            selectedBtn = button
+        if self.frame.width != 0 {
+            if let button = viewWithTag(Int(offset/self.frame.width + CGFloat(titleButtonTag) + 0.5)) as? UIButton , button != selectedBtn{
+                selectedBtn?.isSelected = false
+                button.isSelected = true
+                selectedBtn = button
+            }
+            var tmp = offset
+            while (tmp > self.frame.width){
+                tmp = tmp - self.frame.width
+            }
+            self.addLineConstraint(leftButtonTag: Int(offset/self.frame.width + CGFloat(titleButtonTag)), scale: tmp/self.frame.width)
         }
-        var tmp = offset
-        while (tmp > self.frame.width){
-            tmp = tmp - self.frame.width
-        }
-        self.addLineConstraint(leftButtonTag: Int(offset/self.frame.width + CGFloat(titleButtonTag)), scale: tmp/self.frame.width)
     }
     
     public func updateSelectedLineConstraint(){

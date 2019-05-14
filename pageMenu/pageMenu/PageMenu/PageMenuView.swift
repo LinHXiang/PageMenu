@@ -66,6 +66,13 @@ class PageMenuView: UIView {
             infoScrollView.addSubview(tagView)
         }
         self.bringSubviewToFront(segmentedControl)
+        
+//        NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { (_) in
+//            if self.infoScrollView.frame.width != 0 {
+//                let tag = Int(self.infoScrollView.contentOffset.x / self.infoScrollView.frame.width)
+//                self.infoScrollView.setContentOffset(CGPoint(x: self.infoScrollView.frame.width * CGFloat(tag), y: 0), animated: true)
+//            }
+//        }
     }
     
     override func layoutSubviews() {
