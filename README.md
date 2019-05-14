@@ -11,7 +11,9 @@
  ```
 # setUpSubviews
 ```
- func commonInitTagView(tag: Int) -> UIView {
+extension ViewController : PageMenuViewDelegate {
+    
+    func commonInitTagView(tag: Int) -> UIView {
         let view = UIView()
         switch tag {
         case 0:
@@ -28,5 +30,7 @@
             break
         }
         return view
-  }
+    }
+    
+}
 ```
