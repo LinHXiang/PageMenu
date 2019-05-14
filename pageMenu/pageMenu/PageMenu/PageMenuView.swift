@@ -30,7 +30,6 @@ class PageMenuView: UIView {
     
     convenience init(keys: [String],delegate:PageMenuViewDelegate) {
         self.init(frame: CGRect.zero)
-        self.backgroundColor = UIColor.green
         self.translatesAutoresizingMaskIntoConstraints = false
         self.delegate = delegate
         self.keys = keys
