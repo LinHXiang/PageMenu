@@ -8,14 +8,17 @@
 
 import UIKit
 
-protocol PageMenuViewDelegate : class{
+@objc protocol PageMenuViewDelegate {
+    
     func commonInitTagView(tag:Int)->UIView
+    
+    @objc optional func pageViewDidShow(view:UIView , viewIndex:Int)
 }
 
 class PageMenuView: UIView {
     
     weak var delegate:PageMenuViewDelegate?
-
+    
     public let segmentedControl = PageMenuSegmentedControl()
     
     public let infoScrollView = UIScrollView()
@@ -24,12 +27,23 @@ class PageMenuView: UIView {
     
     public var subInfoViews:[UIView] = []
     
+    override var backgroundColor: UIColor?{
+        didSet{
+            segmentedControl.backgroundColor = self.backgroundColor
+            infoScrollView.backgroundColor = self.backgroundColor
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
     
-    convenience init(keys: [String],delegate:PageMenuViewDelegate) {
+    convenience init(keys: [String],delegate:PageMenuViewDelegate){
         self.init(frame: CGRect.zero)
+        self.setUpMenus(keys: keys, delegate: delegate)
+    }
+    
+    func setUpMenus(keys: [String],delegate:PageMenuViewDelegate) {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.delegate = delegate
         self.keys = keys
@@ -44,7 +58,7 @@ class PageMenuView: UIView {
         self.addConstraint(NSLayoutConstraint(item: segmentedControl, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 0))
         self.addConstraint(NSLayoutConstraint(item: segmentedControl, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0))
         self.addConstraint(NSLayoutConstraint(item: segmentedControl, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
-
+        
         infoScrollView.isPagingEnabled = true
         infoScrollView.translatesAutoresizingMaskIntoConstraints = false
         infoScrollView.showsVerticalScrollIndicator = false
@@ -60,18 +74,17 @@ class PageMenuView: UIView {
         for index in 0..<keys.count {
             let view = self.delegate?.commonInitTagView(tag: index)
             let tagView = view == nil ? UIView() : view!
-            tagView.translatesAutoresizingMaskIntoConstraints = false
             self.subInfoViews.append(tagView)
             infoScrollView.addSubview(tagView)
         }
         self.bringSubviewToFront(segmentedControl)
         
-//        NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { (_) in
-//            if self.infoScrollView.frame.width != 0 {
-//                let tag = Int(self.infoScrollView.contentOffset.x / self.infoScrollView.frame.width)
-//                self.infoScrollView.setContentOffset(CGPoint(x: self.infoScrollView.frame.width * CGFloat(tag), y: 0), animated: true)
-//            }
-//        }
+        //        NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { (_) in
+        //            if self.infoScrollView.frame.width != 0 {
+        //                let tag = Int(self.infoScrollView.contentOffset.x / self.infoScrollView.frame.width)
+        //                self.infoScrollView.setContentOffset(CGPoint(x: self.infoScrollView.frame.width * CGFloat(tag), y: 0), animated: true)
+        //            }
+        //        }
     }
     
     override func layoutSubviews() {
@@ -83,12 +96,16 @@ class PageMenuView: UIView {
         infoScrollView.contentSize = CGSize(width: CGFloat(keys.count) * self.frame.width , height: 0)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     public func clickTag(tag:Int){
         infoScrollView.setContentOffset(CGPoint(x: infoScrollView.frame.width * CGFloat(tag), y: 0), animated: true)
+    }
+    
+    func clickMenu(index:Int){
+        segmentedControl.clickMenu(index: index)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -106,6 +123,14 @@ extension PageMenuView :UIScrollViewDelegate{
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         segmentedControl.scrolling(offset: scrollView.contentOffset.x)
+        
+        if self.frame.width > 0 && scrollView.contentOffset.x >= 0{
+            let tag = scrollView.contentOffset.x / self.frame.width
+            if ((tag*10).truncatingRemainder(dividingBy: 10.0)) == 0 {
+                let index = Int(tag)
+                self.delegate?.pageViewDidShow?(view: self.subInfoViews[index] , viewIndex: index)
+            }
+        }
     }
     
 }
