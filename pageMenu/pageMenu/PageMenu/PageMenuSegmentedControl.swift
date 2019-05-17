@@ -1,6 +1,6 @@
 //
 //  PageMenuSegmentedControl.swift
-//  TagTableView
+//  PageMenu
 //
 //  Created by 浩翔林 on 2019/5/10.
 //  Copyright © 2019 浩翔林. All rights reserved.
@@ -9,13 +9,13 @@
 import UIKit
 
 class PageMenuSegmentedControl: UIView {
-
+    
     var clickTitleHandler:((Int)->Void)? = nil
-
+    
     public var titles = [String]()
-
+    
     public weak var selectedBtn:UIButton? = nil
-
+    
     public let scrollLineView = UIView()
     
     public var scrollLineConstraints:[NSLayoutConstraint] = []
@@ -24,7 +24,6 @@ class PageMenuSegmentedControl: UIView {
     
     func commonInit(_ titles:[String],lineColor:UIColor = UIColor.red){
         
-        self.backgroundColor = UIColor.white
         self.translatesAutoresizingMaskIntoConstraints = false
         self.titles = titles
         
@@ -49,7 +48,7 @@ class PageMenuSegmentedControl: UIView {
                 titleButton.addConstraint(NSLayoutConstraint(item: titleButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height))
                 
                 self.addConstraint(NSLayoutConstraint(item: titleButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier:1.0/CGFloat(self.titles.count) , constant: 0))
-
+                
                 if let lastButton = viewWithTag(index + titleButtonTag - 1) {
                     self.addConstraint(NSLayoutConstraint(item: titleButton, attribute: .left, relatedBy: .equal, toItem: lastButton, attribute: .right, multiplier:1.0 , constant: 0))
                 }else{
@@ -62,14 +61,14 @@ class PageMenuSegmentedControl: UIView {
         setLineColor(lineColor)
         scrollLineView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(scrollLineView)
-
+        
         scrollLineView.addConstraint(NSLayoutConstraint(item: scrollLineView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1.0, constant: 3))
         self.addConstraint(NSLayoutConstraint(item: scrollLineView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier:1.0, constant: 0))
         
         updateSelectedLineConstraint()
-
+        
     }
-
+    
     func setTitleButtonType(normalColor:UIColor? = nil,selectedColor:UIColor? = nil,font:UIFont? = nil){
         self.subviews.forEach { (subview) in
             if subview.isKind(of: UIButton.classForCoder()){
@@ -93,12 +92,16 @@ class PageMenuSegmentedControl: UIView {
         scrollLineView.layer.shadowOpacity = 0.5
         scrollLineView.layer.cornerRadius = 1.5
     }
-
-    @objc func clickTitle(_ sender:UIButton){
-        if sender.tag != selectedBtn?.tag {
-            clickTitleHandler?(sender.tag - titleButtonTag)
+    
+    func clickMenu(index:Int){
+        if (index + titleButtonTag) != selectedBtn?.tag {
+            clickTitleHandler?(index)
             updateSelectedLineConstraint()
         }
+    }
+    
+    @objc public func clickTitle(_ sender:UIButton){
+        clickMenu(index: sender.tag - titleButtonTag)
     }
     
     func scrolling(offset:CGFloat){
@@ -134,7 +137,7 @@ class PageMenuSegmentedControl: UIView {
             let lineLeftConstraint = NSLayoutConstraint(item: scrollLineView, attribute: .left, relatedBy: .equal, toItem: ((scale == 1.0 || scale <= 0.5 ) ? left.titleLabel : right.titleLabel), attribute: .left, multiplier:1.0, constant: ((scale == 1.0 || scale <= 0.5 ) ? 0 : (-(1-scale)*2*(buttonSpace + leftButtonTextRect.size.width))))
             
             let lineRightConstraint = NSLayoutConstraint(item: scrollLineView, attribute: .right, relatedBy: .equal, toItem: ((scale == 1.0 || scale <= 0.5 ) ? left.titleLabel : right.titleLabel), attribute: .right, multiplier:1.0, constant: scale <= 0.5 ? (scale*2*(buttonSpace + RightButtonTextRect.size.width)) : 0)
-
+            
             self.scrollLineConstraints = [lineLeftConstraint,lineRightConstraint]
             self.addConstraints(self.scrollLineConstraints)
         }

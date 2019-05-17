@@ -1,6 +1,6 @@
 //
 //  PageMenuView.swift
-//  TagTableView
+//  PageMenuView
 //
 //  Created by 浩翔林 on 2019/5/10.
 //  Copyright © 2019 浩翔林. All rights reserved.
@@ -10,9 +10,9 @@ import UIKit
 
 @objc protocol PageMenuViewDelegate {
     
-    func commonInitTagView(tag:Int)->UIView
+    func pageMenuView(_ pageMenuView:PageMenuView ,pageForIndexAt index:Int)->UIView
     
-    @objc optional func pageViewDidShow(view:UIView , viewIndex:Int)
+    @objc optional func pageViewDidShow(_ pageMenuView:PageMenuView , _ page:UIView , _ index:Int)
 }
 
 class PageMenuView: UIView {
@@ -49,8 +49,8 @@ class PageMenuView: UIView {
         self.keys = keys
         
         segmentedControl.commonInit(keys)
-        segmentedControl.clickTitleHandler = { [weak self] (tag) in
-            self?.clickTag(tag: tag)
+        segmentedControl.clickTitleHandler = { [weak self] (index) in
+            self?.clickIndex(index)
         }
         self.addSubview(segmentedControl)
         
@@ -72,10 +72,10 @@ class PageMenuView: UIView {
         self.addConstraint(NSLayoutConstraint(item: infoScrollView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
         
         for index in 0..<keys.count {
-            let view = self.delegate?.commonInitTagView(tag: index)
-            let tagView = view == nil ? UIView() : view!
-            self.subInfoViews.append(tagView)
-            infoScrollView.addSubview(tagView)
+            let view = self.delegate?.pageMenuView(self, pageForIndexAt: index)
+            let page = view == nil ? UIView() : view!
+            self.subInfoViews.append(page)
+            infoScrollView.addSubview(page)
         }
         self.bringSubviewToFront(segmentedControl)
         
@@ -96,8 +96,8 @@ class PageMenuView: UIView {
         infoScrollView.contentSize = CGSize(width: CGFloat(keys.count) * self.frame.width , height: 0)
     }
     
-    public func clickTag(tag:Int){
-        infoScrollView.setContentOffset(CGPoint(x: infoScrollView.frame.width * CGFloat(tag), y: 0), animated: true)
+    public func clickIndex(_ index:Int){
+        infoScrollView.setContentOffset(CGPoint(x: infoScrollView.frame.width * CGFloat(index), y: 0), animated: true)
     }
     
     func clickMenu(index:Int){
@@ -112,7 +112,7 @@ class PageMenuView: UIView {
 //SetUp Method
 extension PageMenuView {
     
-    func setTagControl(normalColor:UIColor? = nil,selectedColor:UIColor? = nil,font:UIFont? = nil,lineColor:UIColor = UIColor.red){
+    func setMenuControl(normalColor:UIColor? = nil,selectedColor:UIColor? = nil,font:UIFont? = nil,lineColor:UIColor = UIColor.red){
         segmentedControl.setTitleButtonType(normalColor: normalColor, selectedColor: selectedColor, font: font)
         segmentedControl.setLineColor(lineColor)
     }
@@ -125,10 +125,9 @@ extension PageMenuView :UIScrollViewDelegate{
         segmentedControl.scrolling(offset: scrollView.contentOffset.x)
         
         if self.frame.width > 0 && scrollView.contentOffset.x >= 0{
-            let tag = scrollView.contentOffset.x / self.frame.width
-            if ((tag*10).truncatingRemainder(dividingBy: 10.0)) == 0 {
-                let index = Int(tag)
-                self.delegate?.pageViewDidShow?(view: self.subInfoViews[index] , viewIndex: index)
+            let index = scrollView.contentOffset.x / self.frame.width
+            if ((index*10).truncatingRemainder(dividingBy: 10.0)) == 0 {
+                self.delegate?.pageViewDidShow?(self, self.subInfoViews[Int(index)], Int(index))
             }
         }
     }
