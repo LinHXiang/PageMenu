@@ -25,7 +25,7 @@ class PageMenuView: UIView {
     
     public var keys:[String] = ["测试"]
     
-    public var subInfoViews:[UIView] = []
+    public let infoScrollSubviewTag = 10
     
     override var backgroundColor: UIColor?{
         didSet{
@@ -45,6 +45,7 @@ class PageMenuView: UIView {
     
     func setUpMenus(keys: [String],delegate:PageMenuViewDelegate) {
         self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = UIColor.white
         self.delegate = delegate
         self.keys = keys
         
@@ -71,10 +72,13 @@ class PageMenuView: UIView {
         self.addConstraint(NSLayoutConstraint(item: infoScrollView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0))
         self.addConstraint(NSLayoutConstraint(item: infoScrollView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
         
+        infoScrollView.subviews.forEach { (each) in
+            each.removeFromSuperview()
+        }
         for index in 0..<keys.count {
             let view = self.delegate?.pageMenuView(self, pageForIndexAt: index)
             let page = view == nil ? UIView() : view!
-            self.subInfoViews.append(page)
+            page.tag = infoScrollSubviewTag + index
             infoScrollView.addSubview(page)
         }
         self.bringSubviewToFront(segmentedControl)
@@ -89,9 +93,9 @@ class PageMenuView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        for index in 0..<self.subInfoViews.count {
-            self.subInfoViews[index].frame = CGRect(x: 0, y: 0, width: infoScrollView.frame.width, height: infoScrollView.frame.height)
-            self.subInfoViews[index].frame = CGRect(x: infoScrollView.frame.width * CGFloat(index), y: 0, width: infoScrollView.frame.width, height: infoScrollView.frame.height)
+        for page in self.infoScrollView.subviews {
+            page.frame = CGRect(x: 0, y: 0, width: infoScrollView.frame.width, height: infoScrollView.frame.height)
+            page.frame = CGRect(x: infoScrollView.frame.width * CGFloat(page.tag - infoScrollSubviewTag), y: 0, width: infoScrollView.frame.width, height: infoScrollView.frame.height)
         }
         infoScrollView.contentSize = CGSize(width: CGFloat(keys.count) * self.frame.width , height: 0)
     }
@@ -126,8 +130,8 @@ extension PageMenuView :UIScrollViewDelegate{
         
         if self.frame.width > 0 && scrollView.contentOffset.x >= 0{
             let index = scrollView.contentOffset.x / self.frame.width
-            if ((index*10).truncatingRemainder(dividingBy: 10.0)) == 0 {
-                self.delegate?.pageViewDidShow?(self, self.subInfoViews[Int(index)], Int(index))
+            if ((index*10).truncatingRemainder(dividingBy: 10.0)) == 0 , let page = self.infoScrollView.viewWithTag(Int(index) + infoScrollSubviewTag){
+                self.delegate?.pageViewDidShow?(self, page, page.tag - infoScrollSubviewTag)
             }
         }
     }

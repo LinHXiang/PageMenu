@@ -26,7 +26,9 @@ class PageMenuSegmentedControl: UIView {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.titles = titles
-        
+        self.subviews.forEach { (each) in
+            each.removeFromSuperview()
+        }
         for index in 0..<self.titles.count {
             autoreleasepool {
                 let titleButton = UIButton(type: .custom)

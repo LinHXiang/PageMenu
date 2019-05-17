@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         let key = ["test","test1","test2","test3","test4"]
         let pageMenuView = PageMenuView(keys: key, delegate: self)
         pageMenuView.setMenuControl(normalColor: UIColor.red, selectedColor: UIColor.black, lineColor: UIColor.green)
-    
+        pageMenuView.setUpMenus(keys: ["test","12345"], delegate: self)
         self.view.addSubview(pageMenuView)
         
         let constraintArrayH = NSLayoutConstraint.constraints(withVisualFormat: "H:|[pageMenuView]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["pageMenuView":pageMenuView])
@@ -52,7 +52,7 @@ extension ViewController : PageMenuViewDelegate {
     
     func pageViewDidShow(_ pageMenuView: PageMenuView, _ page: UIView, _ index: Int) {
         if index == 3 {
-            
+            print("3")
         }
     }
     
