@@ -5,20 +5,20 @@
 ```
  let pageMenuView = PageMenuView(keys: ["test","test1","test2","test3","test4"], delegate: self)
 ```
- ## or 
+ #### or 
 ```
  let pageMenuView = PageMenuView()
  pageMenuView.setUpMenus(keys: ["test","test1"], delegate: self)
 ```
 # setUp(like color..)
 ```
- pageMenuView.setTagControl(normalColor: UIColor.red, selectedColor: UIColor.black, lineColor: UIColor.green)
- ```
-# setUpSubviews
+ pageMenuView.setMenuControl(normalColor: UIColor.red, selectedColor: UIColor.black, lineColor: UIColor.green)
+```
+# setUpSubviews (PageMenuViewDelegate)
 ```
 extension ViewController : PageMenuViewDelegate {
     
-    func commonInitTagView(tag: Int) -> UIView {
+    func pageMenuView(_ pageMenuView: PageMenuView, pageForIndexAt index: Int) -> UIView {
         let view = UIView()
         switch tag {
         case 0:
@@ -37,5 +37,11 @@ extension ViewController : PageMenuViewDelegate {
         return view
     }
     
+    
+    func pageViewDidShow(_ pageMenuView: PageMenuView, _ page: UIView, _ index: Int) {
+        if index == 3 {
+            print("3")
+        }
+    }
 }
 ```
