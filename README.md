@@ -5,6 +5,11 @@
 ```
  let pageMenuView = PageMenuView(keys: ["test","test1","test2","test3","test4"], delegate: self)
 ```
+##or 
+```
+ let pageMenuView = PageMenuView()
+ pageMenuView.setUpMenus(keys: ["test","test1"], delegate: self)
+```
 # setUp(like color..)
 ```
  pageMenuView.setTagControl(normalColor: UIColor.red, selectedColor: UIColor.black, lineColor: UIColor.green)
