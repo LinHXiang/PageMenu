@@ -20,7 +20,7 @@ extension ViewController : PageMenuViewDelegate {
     
     func pageMenuView(_ pageMenuView: PageMenuView, pageForIndexAt index: Int) -> UIView {
         let view = UIView()
-        switch tag {
+        switch index {
         case 0:
             view.backgroundColor = UIColor.red
         case 1:
