@@ -8,11 +8,17 @@
 
 import UIKit
 
-@objc protocol PageMenuViewDelegate {
+protocol PageMenuViewDelegate : class {
     
     func pageMenuView(_ pageMenuView:PageMenuView ,pageForIndexAt index:Int)->UIView
     
-    @objc optional func pageViewDidShow(_ pageMenuView:PageMenuView , _ page:UIView , _ index:Int)
+    func pageViewDidShow(_ pageMenuView:PageMenuView , _ page:UIView , _ index:Int)
+}
+
+extension PageMenuViewDelegate{
+    func pageViewDidShow(_ pageMenuView:PageMenuView , _ page:UIView , _ index:Int){
+        
+    }
 }
 
 class PageMenuView: UIView {
@@ -131,7 +137,7 @@ extension PageMenuView :UIScrollViewDelegate{
         if self.frame.width > 0 && scrollView.contentOffset.x >= 0{
             let index = scrollView.contentOffset.x / self.frame.width
             if ((index*10).truncatingRemainder(dividingBy: 10.0)) == 0 , let page = self.infoScrollView.viewWithTag(Int(index) + infoScrollSubviewTag){
-                self.delegate?.pageViewDidShow?(self, page, page.tag - infoScrollSubviewTag)
+                self.delegate?.pageViewDidShow(self, page, page.tag - infoScrollSubviewTag)
             }
         }
     }
