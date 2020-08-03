@@ -88,13 +88,6 @@ class PageMenuView: UIView {
             infoScrollView.addSubview(page)
         }
         self.bringSubviewToFront(segmentedControl)
-        
-        //        NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { (_) in
-        //            if self.infoScrollView.frame.width != 0 {
-        //                let tag = Int(self.infoScrollView.contentOffset.x / self.infoScrollView.frame.width)
-        //                self.infoScrollView.setContentOffset(CGPoint(x: self.infoScrollView.frame.width * CGFloat(tag), y: 0), animated: true)
-        //            }
-        //        }
     }
     
     override func layoutSubviews() {
@@ -125,6 +118,10 @@ extension PageMenuView {
     func setMenuControl(normalColor:UIColor? = nil,selectedColor:UIColor? = nil,font:UIFont? = nil,lineColor:UIColor = UIColor.red){
         segmentedControl.setTitleButtonType(normalColor: normalColor, selectedColor: selectedColor, font: font)
         segmentedControl.setLineColor(lineColor)
+    }
+    
+    func updateMenuControllerTitle(title:String,menuIndex:Int){
+        self.segmentedControl.updateButtonTitle(title: title, menuIndex: menuIndex)
     }
     
 }

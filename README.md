@@ -14,6 +14,9 @@
 ```
  pageMenuView.setMenuControl(normalColor: UIColor.red, selectedColor: UIColor.black, lineColor: UIColor.green)
 ```
+```
+ pageMenuView.updateMenuControllerTitle(title: "00000", menuIndex: 1)
+```
 # setUpSubviews (PageMenuViewDelegate)
 ```
 extension ViewController : PageMenuViewDelegate {

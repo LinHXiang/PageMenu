@@ -22,6 +22,8 @@ class PageMenuSegmentedControl: UIView {
     
     public let titleButtonTag = 80000
     
+    var titlesButtons = [UIButton]()
+    
     func commonInit(_ titles:[String],lineColor:UIColor = UIColor.red){
         
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -46,6 +48,7 @@ class PageMenuSegmentedControl: UIView {
                     self.selectedBtn = titleButton
                 }
                 self.addSubview(titleButton)
+                self.titlesButtons.append(titleButton)
                 
                 titleButton.addConstraint(NSLayoutConstraint(item: titleButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height))
                 
@@ -104,6 +107,15 @@ class PageMenuSegmentedControl: UIView {
     
     @objc public func clickTitle(_ sender:UIButton){
         clickMenu(index: sender.tag - titleButtonTag)
+    }
+    
+    func updateButtonTitle(title:String,menuIndex:Int){
+        self.titlesButtons.forEach { (each) in
+            if (each.tag - titleButtonTag) == menuIndex{
+                each.setTitle(title, for: .normal)
+                return
+            }
+        }
     }
     
     func scrolling(offset:CGFloat){

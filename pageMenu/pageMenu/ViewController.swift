@@ -24,6 +24,9 @@ class ViewController: UIViewController {
         
         self.view.addConstraints(constraintArrayH)
         self.view.addConstraints(constraintArrayV)
+        
+        
+        pageMenuView.updateMenuControllerTitle(title: "00000", menuIndex: 1)
     }
 }
 
